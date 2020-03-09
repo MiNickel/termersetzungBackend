@@ -1,8 +1,10 @@
 package com.termersetzung.termersetzung.controller;
 
+import com.termersetzung.termersetzung.model.dto.ExamDto;
 import com.termersetzung.termersetzung.model.entities.Exam;
 import com.termersetzung.termersetzung.service.interfaces.ExamService;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +25,20 @@ public class ExamController {
     @Autowired
     ExamService examService;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @RequestMapping(path = "", method = RequestMethod.GET)
     public Exam getExam(@RequestParam(required = true) String code) {
         Exam exam = examService.getExam(code);
         return exam;
+    }
+
+    @RequestMapping(path = "/student", method = RequestMethod.GET)
+    public ExamDto getExamForStudent(@RequestParam(required = true) String code) {
+        Exam exam = examService.getExam(code);
+        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
+        return examDto;
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
