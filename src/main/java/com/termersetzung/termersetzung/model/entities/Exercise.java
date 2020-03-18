@@ -9,7 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -26,8 +28,10 @@ public class Exercise {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String professor;
+    @JsonManagedReference(value="exercise-examiner")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "examiner_id", referencedColumnName = "id")
+    private Examiner examiner;
 
     @Column(nullable = false)
     private String category;
@@ -41,10 +45,10 @@ public class Exercise {
 
     }
 
-    public Exercise(int id, String name, String professor, String category, List<Task> tasks) {
+    public Exercise(int id, String name, Examiner examiner, String category, List<Task> tasks) {
         this.id = id;
         this.name = name;
-        this.professor = professor;
+        this.examiner = examiner;
         this.category = category;
         this.tasks = tasks;
     }
@@ -63,14 +67,6 @@ public class Exercise {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(String professor) {
-        this.professor = professor;
     }
 
     public String getCategory() {
@@ -98,5 +94,14 @@ public class Exercise {
         this.tasks.remove(task);
         task.setExercise(null);
     }
+
+    public Examiner getExaminer() {
+        return examiner;
+    }
+
+    public void setExaminer(Examiner examiner) {
+        this.examiner = examiner;
+    }
+
     
 }

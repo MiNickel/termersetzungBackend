@@ -1,78 +1,58 @@
 package com.termersetzung.termersetzung.service.implementation;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import com.termersetzung.termersetzung.model.dto.StepCheckDto;
-import com.termersetzung.termersetzung.model.entities.Exercise;
-import com.termersetzung.termersetzung.service.interfaces.ExerciseService;
-import com.termersetzung.termersetzung.service.repository.ExerciseRepository;
+import com.termersetzung.termersetzung.model.entities.Exam;
+import com.termersetzung.termersetzung.model.entities.StudentExam;
+import com.termersetzung.termersetzung.model.entities.Task;
+import com.termersetzung.termersetzung.service.interfaces.StudentExamService;
+import com.termersetzung.termersetzung.service.repository.ExamRepository;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
- * ExerciseServiceImpl
+ * StudentExamServiceImpl
  */
 @Service
-public class ExerciseServiceImpl implements ExerciseService {
+public class StudentExamServiceImpl implements StudentExamService {
 
     @Autowired
-    ExerciseRepository exerciseRepository;
+    ExamRepository examRepository;
 
     @Override
-    public Exercise getExerciseById(int id) {
-        Exercise exercise = exerciseRepository.findById(id).orElse(null);
+    public StudentExam correctStudentExam(StudentExam studentExam) {
 
-        if (exercise == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Die Klausur konnte nicht gefunden werden.");
-        }
-        return exercise;
-    }
-
-    @Override
-    public List<Exercise> getAllExercises() {
         try {
-            List<Exercise> exercises = (List<Exercise>) exerciseRepository.findAll();
-            return exercises;
-        } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+            boolean isCorrect = applyTransformCheck("blib", "blub", "blab");
+
+            if (isCorrect) {
+                
+            }
+        } catch (Exception e) {
+
         }
 
-    }
+        List<Task> studentTasks = studentExam.getTasks();
+        Exam exam = studentExam.getExam();
+        List<Task> examTasks = exam.getTasks();
 
-    @Override
-    public Exercise uploadExercise(Exercise exercise) {
-        try {
-            exercise = exerciseRepository.save(exercise);
-            return exercise;
-        } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+        for (Task studentTask : studentTasks) {
+
         }
 
-    }
-
-    @Override
-    public List<StepCheckDto> checkSteps(List<StepCheckDto> stepList) {
-        stepList.get(0);
-        for (int i = 0; i < stepList.size(); i++) {
-            StepCheckDto startEquation = stepList.get(i);
-            String rule =  "f -> f" + startEquation.getConversion();
-            String targetEquation = stepList.get(i+1).getStep();
-            boolean isCorrect = applyTransformCheck(startEquation.getStep(), rule, targetEquation);
-            
-            stepList.get(i).setCorrect(isCorrect);
-        }
-        return stepList;
+        return null;
     }
 
     private boolean applyTransformCheck(String startEquation, String rule, String targetEquation) {

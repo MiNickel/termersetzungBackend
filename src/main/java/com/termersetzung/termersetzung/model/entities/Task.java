@@ -1,10 +1,9 @@
 package com.termersetzung.termersetzung.model.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,8 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Task
@@ -31,42 +32,48 @@ public class Task {
     @Column
     private String description;
 
+    @JsonManagedReference(value = "task-steps")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     @Column(nullable = false)
-    private String startTerm;
-
-    @Column(name = "steps")
-    @ElementCollection
-    private List<String> steps = new ArrayList<>();
-
-    @Column(nullable = false)
-    private String endTerm;
+    private List<Step> steps;
 
     @JsonBackReference(value = "exam-task")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="exam_id")
+    @JoinColumn(name = "exam_id")
     private Exam exam;
 
     @JsonBackReference(value = "exercise-task")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="exercise_id")
+    @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    @Column(nullable = false)
+    @JsonBackReference(value = "student-exam-task")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "studentexam_id")
+    private StudentExam studentExam;
+
+    @JsonBackReference(value = "student-exercise-task")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "studentexercise_id")
+    private StudentExercise studentExercise;
+
+    @Column
     private int score;
 
     public Task() {
 
     }
 
-    public Task(int id, String name, String description, String startTerm, List<String> steps, String endTerm, Exam exam, Exercise exercise, int score) {
+    public Task(int id, String name, String description, List<Step> steps, Exam exam,
+            Exercise exercise, StudentExam studentExam, StudentExercise studentExercise, int score) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startTerm = startTerm;
         this.steps = steps;
-        this.endTerm = endTerm;
         this.exam = exam;
         this.exercise = exercise;
+        this.studentExam = studentExam;
+        this.studentExercise = studentExercise;
         this.score = score;
     }
 
@@ -94,30 +101,6 @@ public class Task {
         this.description = description;
     }
 
-    public String getStartTerm() {
-        return startTerm;
-    }
-
-    public void setStartTerm(String startTerm) {
-        this.startTerm = startTerm;
-    }
-
-    public List<String> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<String> steps) {
-        this.steps = steps;
-    }
-
-    public String getEndTerm() {
-        return endTerm;
-    }
-
-    public void setEndTerm(String endTerm) {
-        this.endTerm = endTerm;
-    }
-
     public void setExam(Exam exam) {
         this.exam = exam;
     }
@@ -132,6 +115,48 @@ public class Task {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+    public void addStep(Step step) {
+        this.steps.add(step);
+        step.setTask(this);
+    }
+
+    public void removeStep(Step step) {
+        this.steps.remove(step);
+        step.setTask(null);
+    }
+
+    public StudentExam getStudentExam() {
+        return studentExam;
+    }
+
+    public void setStudentExam(StudentExam studentExam) {
+        this.studentExam = studentExam;
+    }
+
+    public StudentExercise getStudentExercise() {
+        return studentExercise;
+    }
+
+    public void setStudentExercise(StudentExercise studentExercise) {
+        this.studentExercise = studentExercise;
     }
 
 }

@@ -2,6 +2,7 @@ package com.termersetzung.termersetzung.controller;
 
 import java.util.List;
 
+import com.termersetzung.termersetzung.model.dto.StepCheckDto;
 import com.termersetzung.termersetzung.model.entities.Exercise;
 import com.termersetzung.termersetzung.service.interfaces.ExerciseService;
 
@@ -40,5 +41,11 @@ public class ExerciseController {
     public Exercise uploadExercise(@RequestBody Exercise exercise) {
         exercise = exerciseService.uploadExercise(exercise);
         return exercise;
+    }
+
+    @RequestMapping(path = "/check", method = RequestMethod.POST)
+    public List<StepCheckDto> checkSteps(@RequestBody List<StepCheckDto> stepList) {
+        List<StepCheckDto> stepListToReturn = exerciseService.checkSteps(stepList);
+        return stepListToReturn;
     }
 }

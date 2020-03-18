@@ -1,5 +1,6 @@
 package com.termersetzung.termersetzung.model.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.termersetzung.termersetzung.config.CryptoConverter;
@@ -28,8 +31,10 @@ public class Exam {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String professor;
+    @JsonManagedReference(value="exam-examiner")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "examiner_id", referencedColumnName = "id")
+    private Examiner examiner;
 
     @JsonManagedReference(value = "exam-task")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "exam", cascade = CascadeType.ALL)
@@ -37,19 +42,30 @@ public class Exam {
     private List<Task> tasks;
 
     @Convert(converter = CryptoConverter.class)
-    @Column
+    @Column(nullable = false)
     private String code;
+
+    @OneToOne(mappedBy = "exam")
+    private StudentExam studentExam;
+
+    @Column
+    private Date startDate;
+
+    @Column
+    private Date endDate;
 
     public Exam() {
 
     }
 
-    public Exam(int id, String name, String professor, List<Task> tasks, String code) {
+    public Exam(int id, String name, Examiner examiner, List<Task> tasks, String code, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
-        this.professor = professor;
+        this.examiner = examiner;
         this.tasks = tasks;
         this.code = code;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
@@ -66,14 +82,6 @@ public class Exam {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(String professor) {
-        this.professor = professor;
     }
 
     public List<Task> getTasks() {
@@ -101,6 +109,32 @@ public class Exam {
         this.tasks.remove(task);
         task.setExam(null);
     }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Examiner getExaminer() {
+        return examiner;
+    }
+
+    public void setExaminer(Examiner examiner) {
+        this.examiner = examiner;
+    }
+
+    
     
     
 }

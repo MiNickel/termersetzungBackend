@@ -1,5 +1,6 @@
 package com.termersetzung.termersetzung.model.dto;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -20,16 +21,22 @@ public class ExamDto {
 
     private String code;
 
+    private Date startDate;
+
+    private Date endDate;
+
     public ExamDto() {
 
     }
 
-    public ExamDto(int id, String name, String professor, List<TaskDto> tasks, String code) {
+    public ExamDto(int id, String name, String professor, List<TaskDto> tasks, String code, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
         this.professor = professor;
         this.tasks = tasks;
         this.code = code;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
@@ -72,5 +79,22 @@ public class ExamDto {
         this.code = code;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    
     
 }

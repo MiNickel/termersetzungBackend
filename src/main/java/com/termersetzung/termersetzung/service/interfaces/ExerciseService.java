@@ -2,6 +2,7 @@ package com.termersetzung.termersetzung.service.interfaces;
 
 import java.util.List;
 
+import com.termersetzung.termersetzung.model.dto.StepCheckDto;
 import com.termersetzung.termersetzung.model.entities.Exercise;
 
 /**
@@ -14,5 +15,7 @@ public interface ExerciseService {
     public List<Exercise> getAllExercises();
 
     public Exercise uploadExercise(Exercise exercise);
+
+    public List<StepCheckDto> checkSteps(List<StepCheckDto> stepList);
     
 }
