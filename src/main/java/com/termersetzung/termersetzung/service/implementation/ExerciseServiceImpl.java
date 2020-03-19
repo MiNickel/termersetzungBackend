@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import static com.termersetzung.termersetzung.service.implementation.SharedMethodsImpl.applyTransformCheck;
+
 /**
  * ExerciseServiceImpl
  */
@@ -63,62 +65,16 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public List<StepCheckDto> checkSteps(List<StepCheckDto> stepList) {
-        stepList.get(0);
         for (int i = 0; i < stepList.size(); i++) {
-            StepCheckDto startEquation = stepList.get(i);
-            String rule =  "f -> f" + startEquation.getConversion();
-            String targetEquation = stepList.get(i+1).getStep();
-            boolean isCorrect = applyTransformCheck(startEquation.getStep(), rule, targetEquation);
-            
+            StepCheckDto step = stepList.get(i);
+            String startEquation = step.getStartEquation();
+            String rule = "f -> f" + step.getRule();
+            String targetEquation = step.getTargetEquation();
+            boolean isCorrect = applyTransformCheck(startEquation, rule, targetEquation);
+
             stepList.get(i).setCorrect(isCorrect);
         }
         return stepList;
-    }
-
-    private boolean applyTransformCheck(String startEquation, String rule, String targetEquation) {
-        boolean result = false; 
-        try {
-            String url = "http://localhost:8080/MathParserDev/equation/apply_transform_check";
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost(url);
-
-            httpPost.setHeader("Content-Type", "application/json");
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("startEquation", "x-2=-1");
-            jsonObject.put("rule", "f -> f+2");
-            jsonObject.put("targetEquation", "x=1");
-
-            String jsonToString = jsonObject.toString();
-
-            StringEntity stringEntity = new StringEntity(jsonToString);
-            httpPost.setEntity(stringEntity);
-
-            HttpResponse response = httpClient.execute(httpPost);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuffer stringBuffer = new StringBuffer();
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                stringBuffer.append(line);
-            }
-
-            String resultString = stringBuffer.toString();
-
-            JSONObject resultObject = new JSONObject(resultString);
-            String code = resultObject.get("code").toString();
-
-            if (code.equals("0")) {
-                result = true;
-            }
-
-        } catch (Exception ex) {
-
-        }
-
-        return result;
-
     }
 
 }

@@ -5,9 +5,11 @@ package com.termersetzung.termersetzung.model.dto;
  */
 public class StepCheckDto {
 
-    private String step;
+    private String startEquation;
 
-    private String conversion;
+    private String rule;
+
+    private String targetEquation;
 
     private boolean isCorrect;
 
@@ -15,34 +17,42 @@ public class StepCheckDto {
 
     }
 
-    public StepCheckDto(String step, String conversion, boolean isCorrect) {
-        this.step = step;
-        this.conversion = conversion;
+    public StepCheckDto(String startEquation, String rule, String targetEquation, boolean isCorrect) {
+        this.startEquation = startEquation;
+        this.rule = rule;
+        this.targetEquation = targetEquation;
         this.isCorrect = isCorrect;
     }
 
-    public String getStep() {
-        return step;
+    public String getStartEquation() {
+        return startEquation;
     }
 
-    public void setStep(String step) {
-        this.step = step;
+    public void setStartEquation(String startEquation) {
+        this.startEquation = startEquation;
     }
 
-    public String getConversion() {
-        return conversion;
+    public String getRule() {
+        return rule;
     }
 
-    public void setConversion(String conversion) {
-        this.conversion = conversion;
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
+
+    public String getTargetEquation() {
+        return targetEquation;
+    }
+
+    public void setTargetEquation(String targetEquation) {
+        this.targetEquation = targetEquation;
     }
 
     public boolean isCorrect() {
         return isCorrect;
     }
 
-    public void setCorrect(boolean isCorrect) {
-        this.isCorrect = isCorrect;
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
     }
-    
 }

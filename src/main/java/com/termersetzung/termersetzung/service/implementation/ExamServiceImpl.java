@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 /**
  * TestServiceImpl
  */
@@ -44,6 +46,16 @@ public class ExamServiceImpl implements ExamService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
         
+    }
+
+    @Override
+    public List<Exam> getAllExams() {
+        try {
+            List<Exam> exams = (List<Exam>) examRepository.findAll();
+            return exams;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+        }
     }
 
     @Override

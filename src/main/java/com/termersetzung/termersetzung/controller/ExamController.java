@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * TestController
  */
@@ -46,6 +48,12 @@ public class ExamController {
         return examDto;
     }
 
+    @RequestMapping(path = "/examiner", method = RequestMethod.GET)
+    public List<Exam> getAllExamsForExaminer() {
+        List<Exam> exams = examService.getAllExams();
+        return exams;
+    }
+
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Exam getExamById(@PathVariable(value = "id") int id) {
         return examService.getExamById(id);
@@ -60,6 +68,6 @@ public class ExamController {
     @RequestMapping(path = "/student/test", method = RequestMethod.GET)
     public void test() {
         StudentExam studentExam = new StudentExam();
-		studentExamService.correctStudentExam(studentExam);
+        studentExamService.correctStudentExam(studentExam);
     }
 }

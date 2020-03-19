@@ -12,4 +12,6 @@ public interface TaskRepository extends CrudRepository<Task, Integer> {
     Iterable<Task> findAllByExamId(int examId);
 
     Iterable<Task> findAllByExerciseId(int exerciseId);
+
+    Task findById(int taskId);
 }
