@@ -27,10 +27,10 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.any())
-            .build();
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
     }
 
     @Bean
@@ -40,7 +40,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().and()
+        http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll().and()
                 .addFilterAt(new AuthenticationFilter(), BasicAuthenticationFilter.class);
     }
 }
