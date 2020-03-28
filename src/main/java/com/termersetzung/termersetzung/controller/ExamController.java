@@ -48,6 +48,12 @@ public class ExamController {
         return examDto;
     }
 
+    @RequestMapping(path = "/studentExams", method = RequestMethod.GET)
+    public List<StudentExam> getAllStudentExams() {
+        List<StudentExam> studentExamList = studentExamService.getAllStudentExams();
+        return studentExamList;
+    }
+
     @RequestMapping(path = "/examiner", method = RequestMethod.GET)
     public List<Exam> getAllExamsForExaminer() {
         List<Exam> exams = examService.getAllExams();

@@ -37,15 +37,16 @@ public class ExamServiceImpl implements ExamService {
     public Exam uploadExam(Exam exam) {
 
         try {
-            String code = RandomStringUtils.random(6, true, true);
-            exam.setCode(code);
-    
+            if ("".equals(exam.getCode()) || exam.getCode() == null) {
+                String code = RandomStringUtils.random(6, true, true);
+                exam.setCode(code);
+            }
             exam = examRepository.save(exam);
             return exam;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
-        
+
     }
 
     @Override

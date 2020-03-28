@@ -13,6 +13,7 @@ import com.termersetzung.termersetzung.model.entities.Task;
 import com.termersetzung.termersetzung.service.interfaces.StudentExamService;
 import com.termersetzung.termersetzung.service.repository.ExamRepository;
 
+import com.termersetzung.termersetzung.service.repository.StudentExamRepository;
 import com.termersetzung.termersetzung.service.repository.TaskRepository;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -37,6 +38,9 @@ public class StudentExamServiceImpl implements StudentExamService {
 
     @Autowired
     TaskRepository taskRepository;
+
+    @Autowired
+    StudentExamRepository studentExamRepository;
 
     @Override
     public StudentExam correctStudentExam(StudentExam studentExam) {
@@ -73,6 +77,12 @@ public class StudentExamServiceImpl implements StudentExamService {
             }
         }
         return studentExam;
+    }
+
+    @Override
+    public List<StudentExam> getAllStudentExams() {
+        List<StudentExam> studentExamList = (List<StudentExam>) studentExamRepository.findAll();
+        return studentExamList;
     }
 
     private boolean checkExamForEquation(List<Step> taskSteps, String targetEquation) {

@@ -40,7 +40,10 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll().and()
+        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll().and()
                 .addFilterAt(new AuthenticationFilter(), BasicAuthenticationFilter.class);
+
+        http.headers().frameOptions().disable();
     }
 }

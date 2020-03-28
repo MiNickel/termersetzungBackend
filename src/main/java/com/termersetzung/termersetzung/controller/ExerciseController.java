@@ -45,7 +45,6 @@ public class ExerciseController {
 
     @RequestMapping(path = "/check", method = RequestMethod.POST)
     public List<StepCheckDto> checkSteps(@RequestBody List<StepCheckDto> stepList) {
-        List<StepCheckDto> stepListToReturn = exerciseService.checkSteps(stepList);
-        return stepListToReturn;
+        return exerciseService.checkSteps(stepList);
     }
 }
