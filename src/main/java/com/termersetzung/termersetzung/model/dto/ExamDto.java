@@ -3,14 +3,11 @@ package com.termersetzung.termersetzung.model.dto;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * ExamDto
  */
 public class ExamDto {
 
-    @NotNull
     private int id;
 
     private String name;

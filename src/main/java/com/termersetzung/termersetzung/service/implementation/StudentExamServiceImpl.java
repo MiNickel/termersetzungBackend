@@ -1,12 +1,7 @@
 package com.termersetzung.termersetzung.service.implementation;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import com.termersetzung.termersetzung.model.entities.Exam;
 import com.termersetzung.termersetzung.model.entities.Step;
 import com.termersetzung.termersetzung.model.entities.StudentExam;
 import com.termersetzung.termersetzung.model.entities.Task;
@@ -15,13 +10,6 @@ import com.termersetzung.termersetzung.service.repository.ExamRepository;
 
 import com.termersetzung.termersetzung.service.repository.StudentExamRepository;
 import com.termersetzung.termersetzung.service.repository.TaskRepository;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +64,7 @@ public class StudentExamServiceImpl implements StudentExamService {
                 }
             }
         }
+        studentExamRepository.save(studentExam);
         return studentExam;
     }
 

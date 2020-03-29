@@ -48,6 +48,11 @@ public class ExamController {
         return examToExamDto(exam);
     }
 
+    @RequestMapping(path = "/student", method = RequestMethod.POST)
+    public void correctStudentExam(@RequestBody StudentExam studentExam) {
+        studentExamService.correctStudentExam(studentExam);
+    }
+
     @RequestMapping(path = "/studentExams", method = RequestMethod.GET)
     public List<StudentExam> getAllStudentExams() {
         List<StudentExam> studentExamList = studentExamService.getAllStudentExams();
@@ -69,12 +74,6 @@ public class ExamController {
     public Exam uploadExam(@RequestBody Exam exam) {
         exam = examService.uploadExam(exam);
         return exam;
-    }
-
-    @RequestMapping(path = "/student/test", method = RequestMethod.GET)
-    public void test() {
-        StudentExam studentExam = new StudentExam();
-        studentExamService.correctStudentExam(studentExam);
     }
 
     private ExamDto examToExamDto(Exam exam) {
