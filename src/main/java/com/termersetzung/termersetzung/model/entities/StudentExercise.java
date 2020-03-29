@@ -34,14 +34,19 @@ public class StudentExercise {
     @JoinColumn(name = "exercise_id", referencedColumnName = "id")
     private Exercise exercise;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    private Student student;
+
     public StudentExercise() {
 
     }
 
-    public StudentExercise(int id, List<Task> tasks, Exercise exercise) {
+    public StudentExercise(int id, List<Task> tasks, Exercise exercise, Student student) {
         this.id = id;
         this.tasks = tasks;
         this.exercise = exercise;
+        this.student = student;
     }
 
     public int getId() {
@@ -68,5 +73,11 @@ public class StudentExercise {
         this.exercise = exercise;
     }
 
-    
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 }

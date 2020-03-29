@@ -28,7 +28,7 @@ public class Exercise {
     @Column(nullable = false)
     private String name;
 
-    @JsonManagedReference(value="exercise-examiner")
+    @JsonManagedReference(value = "exercise-examiner")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "examiner_id", referencedColumnName = "id")
     private Examiner examiner;
@@ -41,16 +41,20 @@ public class Exercise {
     @Column(nullable = false)
     private List<Task> tasks;
 
+    @OneToOne(mappedBy = "exercise")
+    private StudentExercise studentExercise;
+
     public Exercise() {
 
     }
 
-    public Exercise(int id, String name, Examiner examiner, String category, List<Task> tasks) {
+    public Exercise(int id, String name, Examiner examiner, String category, List<Task> tasks, StudentExercise studentExercise) {
         this.id = id;
         this.name = name;
         this.examiner = examiner;
         this.category = category;
         this.tasks = tasks;
+        this.studentExercise = studentExercise;
     }
 
     public int getId() {
@@ -103,5 +107,11 @@ public class Exercise {
         this.examiner = examiner;
     }
 
-    
+    public StudentExercise getStudentExercise() {
+        return studentExercise;
+    }
+
+    public void setStudentExercise(StudentExercise studentExercise) {
+        this.studentExercise = studentExercise;
+    }
 }

@@ -3,6 +3,7 @@ package com.termersetzung.termersetzung.controller;
 import com.termersetzung.termersetzung.model.dto.ExamDto;
 import com.termersetzung.termersetzung.model.entities.Exam;
 import com.termersetzung.termersetzung.model.entities.StudentExam;
+import com.termersetzung.termersetzung.model.entities.Task;
 import com.termersetzung.termersetzung.service.interfaces.ExamService;
 import com.termersetzung.termersetzung.service.interfaces.StudentExamService;
 
@@ -44,8 +45,7 @@ public class ExamController {
     @RequestMapping(path = "/student", method = RequestMethod.GET)
     public ExamDto getExamForStudent(@RequestParam(required = true) String code) {
         Exam exam = examService.getExam(code);
-        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
-        return examDto;
+        return examToExamDto(exam);
     }
 
     @RequestMapping(path = "/studentExams", method = RequestMethod.GET)
@@ -75,5 +75,19 @@ public class ExamController {
     public void test() {
         StudentExam studentExam = new StudentExam();
         studentExamService.correctStudentExam(studentExam);
+    }
+
+    private ExamDto examToExamDto(Exam exam) {
+        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
+        List<Task> taskList = exam.getTasks();
+        int counter = 0;
+
+        for (Task task : taskList) {
+            String startTerm = task.getSteps().get(0).getStep();
+            examDto.getTasks().get(counter).setStartTerm(startTerm);
+            counter++;
+        }
+
+        return examDto;
     }
 }

@@ -1,10 +1,6 @@
 package com.termersetzung.termersetzung.model.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Student
@@ -16,24 +12,28 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column
     private String firstname;
 
-    @Column(nullable = false)
+    @Column
     private String lastname;
 
     @Column
     private int studentNumber;
 
+    @OneToOne(mappedBy = "student")
+    private StudentExercise studentExercise;
+
     public Student() {
 
     }
 
-    public Student(int id, String firstname, String lastname, int studentNumber) {
+    public Student(int id, String firstname, String lastname, int studentNumber, StudentExercise studentExercise) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.studentNumber = studentNumber;
+        this.studentExercise = studentExercise;
     }
 
     public int getId() {
@@ -68,6 +68,11 @@ public class Student {
         this.lastname = lastname;
     }
 
-    
-    
+    public StudentExercise getStudentExercise() {
+        return studentExercise;
+    }
+
+    public void setStudentExercise(StudentExercise studentExercise) {
+        this.studentExercise = studentExercise;
+    }
 }
