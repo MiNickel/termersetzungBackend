@@ -33,7 +33,7 @@ public class Task {
     private String description;
 
     @JsonManagedReference(value = "task-steps")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
     private List<Step> steps;
 
