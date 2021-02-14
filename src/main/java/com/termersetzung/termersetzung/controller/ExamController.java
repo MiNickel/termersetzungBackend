@@ -2,21 +2,19 @@ package com.termersetzung.termersetzung.controller;
 
 import com.termersetzung.termersetzung.model.dto.ExamDto;
 import com.termersetzung.termersetzung.model.entities.Exam;
-import com.termersetzung.termersetzung.model.entities.StudentExam;
+import com.termersetzung.termersetzung.model.entities.Step;
 import com.termersetzung.termersetzung.model.entities.Task;
 import com.termersetzung.termersetzung.service.interfaces.ExamService;
+import com.termersetzung.termersetzung.service.interfaces.ExaminerService;
 import com.termersetzung.termersetzung.service.interfaces.StudentExamService;
+import com.termersetzung.termersetzung.service.interfaces.StudentService;
+import com.termersetzung.termersetzung.service.interfaces.TaskService;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,57 +34,55 @@ public class ExamController {
     @Autowired
     StudentExamService studentExamService;
 
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public Exam getExam(@RequestParam(required = true) String code) {
-        Exam exam = examService.getExam(code);
-        return exam;
-    }
+    @Autowired
+    ExaminerService examinerService;
 
-    @RequestMapping(path = "/student", method = RequestMethod.GET)
-    public ExamDto getExamForStudent(@RequestParam(required = true) String code) {
-        Exam exam = examService.getExam(code);
-        return examToExamDto(exam);
-    }
+    @Autowired
+    StudentService studentService;
 
-    @RequestMapping(path = "/student", method = RequestMethod.POST)
-    public void correctStudentExam(@RequestBody StudentExam studentExam) {
-        studentExamService.correctStudentExam(studentExam);
-    }
+    @Autowired
+    TaskService taskService;
 
-    @RequestMapping(path = "/studentExams", method = RequestMethod.GET)
-    public List<StudentExam> getAllStudentExams() {
-        List<StudentExam> studentExamList = studentExamService.getAllStudentExams();
-        return studentExamList;
-    }
-
-    @RequestMapping(path = "/examiner", method = RequestMethod.GET)
-    public List<Exam> getAllExamsForExaminer() {
-        List<Exam> exams = examService.getAllExams();
-        return exams;
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Exam getExamById(@PathVariable(value = "id") int id) {
-        return examService.getExamById(id);
-    }
-
-    @RequestMapping(path = "", method = RequestMethod.POST)
-    public Exam uploadExam(@RequestBody Exam exam) {
-        exam = examService.uploadExam(exam);
-        return exam;
-    }
-
-    private ExamDto examToExamDto(Exam exam) {
-        ExamDto examDto = modelMapper.map(exam, ExamDto.class);
-        List<Task> taskList = exam.getTasks();
-        int counter = 0;
-
-        for (Task task : taskList) {
-            String startTerm = task.getSteps().get(0).getStep();
-            examDto.getTasks().get(counter).setStartTerm(startTerm);
-            counter++;
+    @GetMapping(path = "/examiner/{examinerId}")
+    public List<ExamDto> getAllExamsForExaminer(@PathVariable(value = "examinerId") int examinerId) {
+        List<Exam> exams = examService.getAllExamsForExaminer(examinerId);
+        List<ExamDto> examDtos = new ArrayList<>();
+        for (Exam exam : exams) {
+            examDtos.add(modelMapper.map(exam, ExamDto.class));
         }
 
-        return examDto;
+        return examDtos;
+    }
+
+    @GetMapping(path = "/{id}")
+    public ExamDto getExamById(@PathVariable(value = "id") int id) {
+        Exam exam = examService.getExamById(id);
+        return modelMapper.map(exam, ExamDto.class);
+    }
+
+    @PostMapping(path = "")
+    public ExamDto uploadExam(@RequestBody ExamDto examDto) {
+        Exam exam = mapExamDtoToExam(examDto);
+        exam = examService.uploadExam(exam);
+        return modelMapper.map(exam, ExamDto.class);
+    }
+
+    private Exam mapExamDtoToExam(ExamDto examDto) {
+        Exam exam = modelMapper.map(examDto, Exam.class);
+        List<Task> tasks = exam.getTasks();
+        exam.setTasks(new ArrayList<>());
+        for (Task task : tasks) {
+            List<Step> steps = task.getSteps();
+            task.setSteps(new ArrayList<>());
+            for (Step step: steps) {
+                task.addStep(step);
+            }
+            task.setExercise(null);
+            task.setStudentExam(null);
+            task.setStudentExercise(null);
+            exam.addTask(task);
+        }
+        exam.setExaminer(examinerService.findById(examDto.getExaminerId()));
+        return exam;
     }
 }

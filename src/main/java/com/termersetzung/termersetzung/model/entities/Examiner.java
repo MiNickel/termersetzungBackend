@@ -1,11 +1,13 @@
 package com.termersetzung.termersetzung.model.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -26,22 +28,22 @@ public class Examiner {
     private String lastname;
 
     @JsonBackReference(value="exam-examiner")
-    @OneToOne(mappedBy = "examiner")
-    private Exam exam;
+    @OneToMany(mappedBy = "examiner")
+    private List<Exam> exams;
 
     @JsonBackReference(value="exercise-examiner")
-    @OneToOne(mappedBy = "examiner")
-    private Exercise exercise;
+    @OneToMany(mappedBy = "examiner")
+    private List<Exercise> exercises;
 
     public Examiner() {
     }
 
-    public Examiner(int id, String firstname, String lastname, Exam exam, Exercise exercise) {
+    public Examiner(int id, String firstname, String lastname, List<Exam> exams, List<Exercise> exercises) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.exam = exam;
-        this.exercise = exercise;
+        this.exams = exams;
+        this.exercises = exercises;
     }
 
     public int getId() {
@@ -68,20 +70,20 @@ public class Examiner {
         this.lastname = lastname;
     }
 
-    public Exam getExam() {
-        return exam;
+    public List<Exam> getExams() {
+        return exams;
     }
 
-    public void setExam(Exam exam) {
-        this.exam = exam;
+    public void setExams(List<Exam> exams) {
+        this.exams = exams;
     }
 
-    public Exercise getExercise() {
-        return exercise;
+    public List<Exercise> getExercises() {
+        return exercises;
     }
 
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
     }
 
     

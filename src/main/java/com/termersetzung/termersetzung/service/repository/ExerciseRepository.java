@@ -1,5 +1,7 @@
 package com.termersetzung.termersetzung.service.repository;
 
+import java.util.List;
+
 import com.termersetzung.termersetzung.model.entities.Exercise;
 
 import org.springframework.data.repository.CrudRepository;
@@ -9,4 +11,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface ExerciseRepository extends CrudRepository<Exercise, Integer> {
     
+    List<Exercise> findAllByExaminerId(int examinerId);
 }

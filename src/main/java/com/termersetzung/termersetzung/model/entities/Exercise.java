@@ -10,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -29,7 +29,7 @@ public class Exercise {
     private String name;
 
     @JsonManagedReference(value = "exercise-examiner")
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "examiner_id", referencedColumnName = "id")
     private Examiner examiner;
 
@@ -37,24 +37,25 @@ public class Exercise {
     private String category;
 
     @JsonManagedReference(value = "exercise-task")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exercise", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
     private List<Task> tasks;
 
-    @OneToOne(mappedBy = "exercise")
-    private StudentExercise studentExercise;
+    @JsonManagedReference(value = "student-exercises")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exercise", cascade = CascadeType.ALL)
+    private List<StudentExercise> studentExercises;
 
     public Exercise() {
 
     }
 
-    public Exercise(int id, String name, Examiner examiner, String category, List<Task> tasks, StudentExercise studentExercise) {
+    public Exercise(int id, String name, Examiner examiner, String category, List<Task> tasks, List<StudentExercise> studentExercises) {
         this.id = id;
         this.name = name;
         this.examiner = examiner;
         this.category = category;
         this.tasks = tasks;
-        this.studentExercise = studentExercise;
+        this.studentExercises = studentExercises;
     }
 
     public int getId() {
@@ -107,11 +108,11 @@ public class Exercise {
         this.examiner = examiner;
     }
 
-    public StudentExercise getStudentExercise() {
-        return studentExercise;
+    public List<StudentExercise> getStudentExercises() {
+        return studentExercises;
     }
 
-    public void setStudentExercise(StudentExercise studentExercise) {
-        this.studentExercise = studentExercise;
+    public void setStudentExercises(List<StudentExercise> studentExercises) {
+        this.studentExercises = studentExercises;
     }
 }

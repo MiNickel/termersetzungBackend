@@ -2,17 +2,9 @@ package com.termersetzung.termersetzung.model.entities;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -30,18 +22,25 @@ public class StudentExam {
     @Column(nullable = false)
     private List<Task> tasks;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @JsonBackReference(value = "student-exams")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_id", referencedColumnName = "id")
     private Exam exam;
+
+    @JsonBackReference(value = "studentExam")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    private Student student;
 
     public StudentExam() {
 
     }
 
-    public StudentExam(int id, List<Task> tasks, Exam exam) {
+    public StudentExam(int id, List<Task> tasks, Exam exam, Student student) {
         this.id = id;
         this.tasks = tasks;
         this.exam = exam;
+        this.student = student;
     }
 
     public int getId() {
@@ -60,6 +59,16 @@ public class StudentExam {
         this.tasks = tasks;
     }
 
+    public void addTask(Task task) {
+        this.tasks.add(task);
+        task.setStudentExam(this);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+        task.setStudentExam(null);
+    }
+
     public Exam getExam() {
         return exam;
     }
@@ -68,5 +77,11 @@ public class StudentExam {
         this.exam = exam;
     }
 
-    
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 }

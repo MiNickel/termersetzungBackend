@@ -32,6 +32,9 @@ public class Task {
     @Column
     private String description;
 
+    @Column
+    private String notes;
+
     @JsonManagedReference(value = "task-steps")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
@@ -64,11 +67,12 @@ public class Task {
 
     }
 
-    public Task(int id, String name, String description, List<Step> steps, Exam exam,
+    public Task(int id, String name, String description, String notes, List<Step> steps, Exam exam,
             Exercise exercise, StudentExam studentExam, StudentExercise studentExercise, int score) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.notes = notes;
         this.steps = steps;
         this.exam = exam;
         this.exercise = exercise;
@@ -158,5 +162,15 @@ public class Task {
     public void setStudentExercise(StudentExercise studentExercise) {
         this.studentExercise = studentExercise;
     }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    
 
 }

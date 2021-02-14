@@ -12,8 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.termersetzung.termersetzung.config.CryptoConverter;
@@ -32,12 +32,12 @@ public class Exam {
     private String name;
 
     @JsonManagedReference(value="exam-examiner")
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "examiner_id", referencedColumnName = "id")
     private Examiner examiner;
 
     @JsonManagedReference(value = "exam-task")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exam", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(nullable = false)
     private List<Task> tasks;
 
@@ -45,24 +45,35 @@ public class Exam {
     @Column(nullable = false)
     private String code;
 
-    @OneToOne(mappedBy = "exam")
-    private StudentExam studentExam;
+    @JsonManagedReference(value = "student-exams")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exam", cascade = CascadeType.ALL)
+    private List<StudentExam> studentExams;
 
-    @Column
+    @Column(nullable = false)
     private Date startDate;
 
-    @Column
+    @Column(nullable = false)
     private Date endDate;
 
     public Exam() {
 
     }
 
-    public Exam(int id, String name, Examiner examiner, List<Task> tasks, String code, Date startDate, Date endDate) {
+    public Exam(int id, String name, Examiner examiner, List<Task> tasks, String code, Date startDate, Date endDate, List<StudentExam> studentExams) {
         this.id = id;
         this.name = name;
         this.examiner = examiner;
         this.tasks = tasks;
+        this.code = code;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.studentExams = studentExams;
+    }
+
+    public Exam(int id, String name, Examiner examiner, String code, Date startDate, Date endDate) {
+        this.id = id;
+        this.name = name;
+        this.examiner = examiner;
         this.code = code;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -134,7 +145,11 @@ public class Exam {
         this.examiner = examiner;
     }
 
-    
-    
-    
+    public List<StudentExam> getStudentExams() {
+        return studentExams;
+    }
+
+    public void setStudentExams(List<StudentExam> studentExams) {
+        this.studentExams = studentExams;
+    }
 }

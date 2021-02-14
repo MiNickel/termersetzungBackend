@@ -6,6 +6,7 @@ import com.termersetzung.termersetzung.model.dto.StepCheckDto;
 import com.termersetzung.termersetzung.model.entities.Exercise;
 import com.termersetzung.termersetzung.service.interfaces.ExerciseService;
 import com.termersetzung.termersetzung.service.repository.ExerciseRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,13 +34,22 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    public List<Exercise> getAllExercisesForExaminer(int examinerId) {
+        try {
+            return exerciseRepository.findAllByExaminerId(examinerId);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+        }
+
+    }
+
+    @Override
     public List<Exercise> getAllExercises() {
         try {
             return (List<Exercise>) exerciseRepository.findAll();
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
-
     }
 
     @Override

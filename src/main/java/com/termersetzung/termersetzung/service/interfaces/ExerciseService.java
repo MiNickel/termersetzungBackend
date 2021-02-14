@@ -12,6 +12,8 @@ public interface ExerciseService {
 
     public Exercise getExerciseById(int id);
 
+    public List<Exercise> getAllExercisesForExaminer(int examinerId);
+
     public List<Exercise> getAllExercises();
 
     public Exercise uploadExercise(Exercise exercise);

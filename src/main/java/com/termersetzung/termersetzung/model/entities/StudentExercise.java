@@ -2,17 +2,9 @@ package com.termersetzung.termersetzung.model.entities;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -30,12 +22,14 @@ public class StudentExercise {
     @Column(nullable = false)
     private List<Task> tasks;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "exercise_id", referencedColumnName = "id")
+    @JsonBackReference(value = "student-exercises")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JsonBackReference(value = "studentExercise")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
     private Student student;
 
     public StudentExercise() {
@@ -63,6 +57,16 @@ public class StudentExercise {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+        task.setStudentExercise(this);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+        task.setStudentExercise(null);
     }
 
     public Exercise getExercise() {

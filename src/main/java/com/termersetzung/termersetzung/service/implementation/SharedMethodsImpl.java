@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 
 public class SharedMethodsImpl {
 
+    private final static String MathParserUrl = "http://durchschlaf.ad.fh-bielefeld.de:8080/MathParserDev";
+
     private SharedMethodsImpl() {
 
     }
@@ -21,7 +23,7 @@ public class SharedMethodsImpl {
     public static boolean applyTransformCheck(String startEquation, String rule, String targetEquation) {
         boolean result = false;
         try {
-            String url = "http://localhost:8080/MathParserDev/equation/apply_transform_check";
+            String url = MathParserUrl + "/equation/apply_transform_check";
             HttpResponse response;
             try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
                 HttpPost httpPost = new HttpPost(url);
@@ -39,25 +41,25 @@ public class SharedMethodsImpl {
                 httpPost.setEntity(stringEntity);
 
                 response = httpClient.execute(httpPost);
-            }
 
-            StringBuilder stringBuffer;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+                StringBuilder stringBuffer;
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
 
-                stringBuffer = new StringBuilder();
-                String line = "";
-                while ((line = br.readLine()) != null) {
-                    stringBuffer.append(line);
+                    stringBuffer = new StringBuilder();
+                    String line = "";
+                    while ((line = br.readLine()) != null) {
+                        stringBuffer.append(line);
+                    }
                 }
-            }
 
-            String resultString = stringBuffer.toString();
+                String resultString = stringBuffer.toString();
 
-            JSONObject resultObject = new JSONObject(resultString);
-            String code = resultObject.get("code").toString();
+                JSONObject resultObject = new JSONObject(resultString);
+                String correct = resultObject.get("result").toString();
 
-            if (code.equals("0")) {
-                result = true;
+                if (correct.equals("true")) {
+                    result = true;
+                }
             }
 
         } catch (Exception ex) {

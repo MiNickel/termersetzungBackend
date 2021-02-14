@@ -11,9 +11,11 @@ public interface ExamService {
 
     public Exam getExam(String code);
 
+    public Exam getExamForStudent(String code, int studentId, String firstname, String lastname);
+
     public Exam getExamById(int id);
 
     public Exam uploadExam(Exam exam);
 
-    public List<Exam> getAllExams();
+    public List<Exam> getAllExamsForExaminer(int examinerId);
 }

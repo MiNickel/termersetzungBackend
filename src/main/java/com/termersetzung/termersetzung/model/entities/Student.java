@@ -1,6 +1,9 @@
 package com.termersetzung.termersetzung.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Student
@@ -21,19 +24,24 @@ public class Student {
     @Column
     private int studentNumber;
 
-    @OneToOne(mappedBy = "student")
-    private StudentExercise studentExercise;
+    @JsonManagedReference(value = "studentExercise")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "student", cascade = CascadeType.ALL)
+    private List<StudentExercise> studentExercises;
+
+    @JsonManagedReference(value = "studentExam")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "student", cascade = CascadeType.ALL)
+    private List<StudentExam> studentExams;
 
     public Student() {
-
     }
 
-    public Student(int id, String firstname, String lastname, int studentNumber, StudentExercise studentExercise) {
+    public Student(int id, String firstname, String lastname, int studentNumber, List<StudentExercise> studentExercises, List<StudentExam> studentExams) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.studentNumber = studentNumber;
-        this.studentExercise = studentExercise;
+        this.studentExercises = studentExercises;
+        this.studentExams = studentExams;
     }
 
     public int getId() {
@@ -68,11 +76,19 @@ public class Student {
         this.lastname = lastname;
     }
 
-    public StudentExercise getStudentExercise() {
-        return studentExercise;
+    public List<StudentExercise> getStudentExercises() {
+        return studentExercises;
     }
 
-    public void setStudentExercise(StudentExercise studentExercise) {
-        this.studentExercise = studentExercise;
+    public void setStudentExercises(List<StudentExercise> studentExercises) {
+        this.studentExercises = studentExercises;
+    }
+
+    public List<StudentExam> getStudentExams() {
+        return studentExams;
+    }
+
+    public void setStudentExams(List<StudentExam> studentExams) {
+        this.studentExams = studentExams;
     }
 }
